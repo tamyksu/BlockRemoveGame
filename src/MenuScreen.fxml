@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #3cb371;" styleClass="s" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainScreenController">
+   <children>
+      <Button fx:id="start_game_bt" layoutX="148.0" layoutY="179.0" mnemonicParsing="false" onAction="#game_button" prefHeight="56.0" prefWidth="191.0" text="Start Game" textFill="#0f172c">
+         <font>
+            <Font name="Comic Sans MS" size="24.0" />
+         </font></Button>
+      <Text fill="#111111" layoutX="27.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Best Record:" wrappingWidth="191.0">
+         <font>
+            <Font name="Comic Sans MS" size="30.0" />
+         </font>
+      </Text>
+      <TextField fx:id="best_record" layoutX="226.0" layoutY="313.0" />
+      <Text fill="#942626" layoutX="95.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BLOCKS  REMOVER" wrappingWidth="342.0">
+         <font>
+            <Font name="Comic Sans MS" size="34.0" />
+         </font>
+      </Text>
+      <Ellipse fill="#dfe3e8" layoutX="81.0" layoutY="37.0" radiusX="81.0" radiusY="37.0" stroke="BLACK" strokeType="INSIDE" />
+      <Text fill="MEDIUMSEAGREEN" layoutX="24.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BTF-GAMES" wrappingWidth="113.234375">
+         <font>
+            <Font name="Comic Sans MS" size="18.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>
