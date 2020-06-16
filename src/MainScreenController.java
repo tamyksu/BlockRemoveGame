@@ -12,8 +12,8 @@ import javafx.scene.control.Button;
 	import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-	public class MainScreenController {
-
+	public class MainScreenController  {
+	public static JFrame object;
 	    @FXML
 	    private Button start_game_bt;
 
@@ -28,22 +28,21 @@ import javafx.stage.Stage;
 	   
 	    	
 	    	 obj= new JFrame();
+	    	 object=obj;
 	    	 gamePlay= new GameController();
 	    	obj.setBounds(10,10,700,600);
 	    	
 	    	obj.setResizable(false);
+	    	//this.close();
 	    	obj.setVisible(true);
 	    	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    	obj.add(gamePlay);
+	    	//obj.setVisible(false);
 	    	//getGameControllerJFrame();
 
 
 	    }
-	    public void getGameControllerJFrame()
-	    {
-	    	obj.dispose(); // close window
-	    	obj.setVisible(false);
-	    }
+
 
 	}
 

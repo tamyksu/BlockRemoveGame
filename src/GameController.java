@@ -14,20 +14,22 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-
+import java.awt.event.*;
 import javafx.scene.control.Button;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
+import java.awt.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.FontBuilder;
 import javafx.stage.Stage;
+
 
 public class GameController extends JPanel implements ActionListener, KeyListener,MouseMotionListener{
 	private int total_brick=21;
@@ -40,11 +42,15 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int flag_play=0;
 	int score=0;
 	Timer time;
+	Timer levelTime;
 	private int delay=3;
 	boolean state = false;
+	int mouse_flag=0;
 private Button button;
-
+public static JFrame object=null; 
 	//constructor
+
+	@SuppressWarnings("deprecation")
 	public GameController() {
 		
 		big_map=new Block(3, 7);//initialize matrix of blocks
@@ -53,14 +59,25 @@ private Button button;
 		setFocusable(true);//?
 		setFocusTraversalKeysEnabled(false);//?
 		time = new Timer(delay,this);//for delay of ball
+	
+		//levelTime = new Timer(1000, null);
+		//levelTime.schedule(new LevelUp(), 0, 5000);
+		LevelUp.lu.level_timer();//start the timer
 		time.start();
-		//flag_play=1;
+		flag_play=1;
+		if(Main.primaryStage.isShowing())
+		Main.primaryStage.hide();
+	//	if(object!=null) {
+	//	GameController.object.hide();
+	//	}
+
+			
 		
 	}
 	
 	 public void mouseMoved(MouseEvent e) {
 
-		
+		if(mouse_flag==0) {
 		if(e.getX()> player)
 		{
 			if(player>=600) {//out of boundaries
@@ -82,6 +99,7 @@ private Button button;
 		
 			
 		}
+	 }
 		
 		
 	@Override
@@ -132,30 +150,104 @@ private Button button;
 		 
 		g.setColor(Color.pink);
 		g.fillOval(pos_x_ball, pos_y_ball, 20, 20);
-		g.dispose();
-		
+		g.setColor(Color.white);
+		g.setFont(new Font("serif",Font.BOLD,25));
+		g.drawString(""+score, 590, 30);
 	
+		
+		
+		if(pos_y_ball>600&&flag_play==1) {
+			flag_play=0;
+			dir_x_ball=0;
+			mouse_flag=1;
+			dir_y_ball=0;
+		 	JFrame obj= new JFrame();
+	    	obj.setTitle("END!");
+	    	
+	    	String scoreS=Integer.toString(score);
+	    	
+	    	 JButton button = new JButton("New Game");
+	    	// button.setBounds(100,100,60,30);  
+	    	 // Component button = new Button("Menu");
+	    	 button.addActionListener(new ActionListener()
+	    	 {  
+	    		    public void actionPerformed(ActionEvent e)
+	    		    {  
+	    		    	
+	    		    
+	    		      	obj.setResizable(false);
+	    		    	obj.setVisible(true);
+	    		  //	Main.primaryStage.show();
+	    		     	JFrame obj= new JFrame();
+	    		    	GameController gamePlay= new GameController();
+	    		    	obj.setBounds(10,10,700,600);
+	    		    	
+	    		    	obj.setResizable(false);
+	    		    	obj.setVisible(true);
+	    		    	//object=obj;
+	    		    	mouse_flag=0;
+	    		    //	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    		    	obj.add(gamePlay);
+	    		    }  
+	    		    });  
+	    	 
+	    	 JButton bExit = new JButton("Exit");
+	    	// bExit.setBounds(50,50,60,30);  
+	    	 bExit.addActionListener(new ActionListener(){
+			    public void actionPerformed(ActionEvent e)
+			    {  
+    		      	//JFrame obj= new JFrame();
+    		    	//obj.setBounds(10,100,700,600);
+			    	obj.setResizable(false);
+			    	obj.setVisible(true);
+    		    	//obj.setResizable(false);
+    		    //	obj.setVisible(true);
+    		    	 System.exit(0);
+    		  
+    		    	
+    		    }  
+    		    }); 
+	    
+	    	 Label l=new Label("Youre score:"+"  "+scoreS);
+	    	l.setFont(new Font("Neuropol", Font.PLAIN, 22));
+	    	 l.setBounds(50, 50, 200, 30);
+	    	 bExit.setBounds(300,50,200,30);
+	    	 button.setBounds(300,300,100,30);  
+	    	 
+	    	 obj.add(l);
+	    	 obj.add(bExit);
+	    	
+	    
+	    	obj.add(button);
+	    	bExit.setVisible(true);
+	    	obj.setSize(600, 300);
+	    	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    	obj.setLocationRelativeTo(null); // this method display the JFrame to center position of a screen
+	    	//g.dispose();
+	    //	setVisible(false);
+	    	
+	    	MainScreenController.object.dispose();
+	    	//if()
+	    	//GameController.object.dispose();
+	    	obj.setVisible(true);
+	    //	object=obj;
+	    	//close();
+
+
+		}
+	g.dispose();
 	}
 
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	  
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		time.start();
-		if(flag_play==1) {
-		//	Rectangle b=new Rectangle(pos_x_ball,dir_y_ball,20,20);
-		//	Rectangle p=new Rectangle(player,400,100,8);
+		if(flag_play==1)
+		{
+
 			
 		if((new BoundingBox (pos_x_ball,pos_y_ball,20,20).intersects(new BoundingBox(player,550,100,8))))
 		{
@@ -204,74 +296,12 @@ private Button button;
 			if(pos_x_ball>670)
 				dir_x_ball=-dir_x_ball;
 		
-			//}
-				if(pos_y_ball>600&&flag_play==1) {
-				flag_play=0;
-				
-			 	JFrame obj= new JFrame();
-		    	obj.setTitle("END!");
-		    	
-		    	String scoreS=Integer.toString(score);
-		    	
-		    	 JButton button = new JButton("New Game");
-		    	// button.setBounds(100,100,60,30);  
-		    	 // Component button = new Button("Menu");
-		    	 button.addActionListener(new ActionListener(){  
-		    		    public void actionPerformed(ActionEvent e)
-		    		    {  
-		    		      	JFrame obj= new JFrame();
-		    		    	GameController gamePlay= new GameController();
-		    		    	obj.setBounds(10,10,700,600);
-		    		    	
-		    		    	obj.setResizable(false);
-		    		    	obj.setVisible(true);
-		    		    //	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    		    	obj.add(gamePlay);
-		    		    }  
-		    		    });  
-		    	 
-		    	 JButton bExit = new JButton("Exit");
-		    	// bExit.setBounds(50,50,60,30);  
-		    	 bExit.addActionListener(new ActionListener(){
-				    public void actionPerformed(ActionEvent e)
-				    {  
-	    		      	//JFrame obj= new JFrame();
-	    		    	//obj.setBounds(10,100,700,600);
-	    		    	
-	    		    	//obj.setResizable(false);
-	    		    //	obj.setVisible(true);
-	    		    	 System.exit(0);
-	    		  
-	    		    	
-	    		    }  
-	    		    }); 
-		    
-		    	 Label l=new Label("Youre score:"+"  "+scoreS);
-		    	l.setFont(new Font("Neuropol", Font.PLAIN, 22));
-		    	 l.setBounds(50, 50, 200, 30);
-		    	 bExit.setBounds(300,50,200,30);
-		    	 button.setBounds(300,300,200,30);  
-		    	 
-		    	obj.add(l);
-		    	obj.add(bExit);
-		    	obj.add(button);
-		    	
-		    	obj.setSize(600, 300);
-		    	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    	obj.setLocationRelativeTo(null); // this method display the JFrame to center position of a screen
-		    	obj.setVisible(true);
-		    	//MainScreenController gc = null;
-		   // return;
-		    	//gc.getGameControllerJFrame();// hide window
-		        // this will hide and dispose the frame, so that the application quits by
-		        // itself if there is nothing else around. 
-		       
 
 		    
 			
 			}
 		
-		}
+		
 		repaint();
 	}
 
@@ -284,6 +314,18 @@ private Button button;
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

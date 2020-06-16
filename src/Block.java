@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import javafx.scene.shape.Rectangle;
 
 public class Block {
-	public int map[][];
+	public static int map[][];
 	public int w,h;
 	public Block(int row,int col) {
 		map = new int[row][col];
