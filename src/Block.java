@@ -22,8 +22,9 @@ public class Block {
 	}
 	
 		
-		w=540/col;
-		h=150/row;
+		//w=540/col;
+		w=80;
+		h=50;
 	}	
 	public void draw(Graphics2D g) {
 		for(int i=0;i<map.length;i++) {

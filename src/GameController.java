@@ -37,32 +37,34 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int pos_y_ball=350;
 	private int dir_y_ball=-1;
 	private int dir_x_ball=-2;
-	private Block big_map;
+	public  static Block big_map;
 	private int player=310;
 	private int flag_play=0;
 	int score=0;
 	Timer time;
 	Timer levelTime;
-	private int delay=3;
+	private int delay=5;
 	boolean state = false;
 	int mouse_flag=0;
+	public LevelUp lu=new LevelUp();
 private Button button;
 public static JFrame object=null; 
 	//constructor
 
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public GameController() {
-		
+	
 		big_map=new Block(3, 7);//initialize matrix of blocks
 		addKeyListener(this);//?
 		 addMouseMotionListener(this);
 		setFocusable(true);//?
 		setFocusTraversalKeysEnabled(false);//?
 		time = new Timer(delay,this);//for delay of ball
+		  lu.level_timer();
 	
 		//levelTime = new Timer(1000, null);
 		//levelTime.schedule(new LevelUp(), 0, 5000);
-		LevelUp.lu.level_timer();//start the timer
+		
 		time.start();
 		flag_play=1;
 		if(Main.primaryStage.isShowing())
