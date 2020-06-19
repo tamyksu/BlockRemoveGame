@@ -13,13 +13,46 @@ import javafx.scene.shape.Rectangle;
 public class Block {
 	public static int map[][];
 	public int w,h;
-	public Block(int row,int col) {
+	public Block(int row,int col,String type) {
 		map = new int[row][col];
-		for(int i=0;i<map.length;i++) {
-			for(int j=0;j<map[0].length;j++) {//initialize the look
+		
+		switch (type) {
+		case "normal":
+			for(int i=0;i<map.length;i++)
+			{
+			for(int j=0;j<map[0].length;j++) 
+			{//initialize the look
 				map[i][j]=1;
 			}
-	}
+				}
+			break;
+			
+		case "heart":
+
+			/*for(int j=0;j<map[0].length;j++) 
+				if(j!=3&&j!=2)
+				map[0][j]=1;*/
+	
+			for(int i=0;i<map.length;i++)
+			{
+			for(int j=i;j<map[0].length-i;j++) 
+			{//initialize the look
+			 map[i][j]=1;
+			}
+			}
+			break;
+			//xx-xxx
+			//xxxxxxx
+			//-xxxxx-
+			//--xxx--
+			//---x---
+			//
+
+		default:
+			break;
+		}
+	
+	
 	
 		
 		//w=540/col;

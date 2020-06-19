@@ -33,7 +33,7 @@ int new_map[][] ;
 				}
 			
 		}
-		GameController.big_map=new Block(3+i, 7);
+		//GameController.big_map=new Block(3+i, 7,"normal");
 		
 		for(int k=0; k<3+i; k++)
 			  for(int j=0; j<7; j++)
@@ -44,8 +44,8 @@ int new_map[][] ;
 	}
 	
 	public void level_timer() {
-		Timer timer = new Timer();
-		timer.schedule(new LevelUp(), 0, 3000);
+		//Timer timer = new Timer();
+		//timer.schedule(new LevelUp(), 0, 9000);
 		System.out.println("check level_timer");
 		
 	}

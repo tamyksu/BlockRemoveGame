@@ -40,6 +40,7 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	public  static Block big_map;
 	private int player=310;
 	private int flag_play=0;
+	int num=1;
 	int score=0;
 	Timer time;
 	Timer levelTime;
@@ -54,7 +55,7 @@ public static JFrame object=null;
 	//@SuppressWarnings("deprecation")
 	public GameController() {
 	
-		big_map=new Block(3, 7);//initialize matrix of blocks
+		big_map=new Block(4,7,"normal");//initialize matrix of blocks
 		addKeyListener(this);//?
 		 addMouseMotionListener(this);
 		setFocusable(true);//?
@@ -154,8 +155,32 @@ public static JFrame object=null;
 		g.fillOval(pos_x_ball, pos_y_ball, 20, 20);
 		g.setColor(Color.white);
 		g.setFont(new Font("serif",Font.BOLD,25));
-		g.drawString(""+score, 590, 30);
-	
+		g.drawString("Score: "+score, 590, 30);
+		g.drawString("Level: "+num, 290, 30);
+			
+		
+	int flag=0;
+		for(int i=0;i<big_map.map.length&& flag==0;i++)
+		{
+			for(int j=0;j<big_map.map[0].length&& flag==0;j++ ) {
+				if(big_map.map[i][j]!=0)//not dissapper 
+				{
+				flag=1;
+				
+				}
+			}}
+		if(flag ==0)
+		{
+			num++;
+			
+			//xxx-xxx
+			//xxxxxxx
+			//-xxxxx-
+			//--xxx--
+			//---x---
+			big_map=new Block(5, 7,"heart");
+		}
+				
 		
 		
 		if(pos_y_ball>600&&flag_play==1) {
