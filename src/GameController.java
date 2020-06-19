@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.RadialGradientPaint;
+
 import java.awt.Graphics2D;
 import java.awt.Label;
 import java.awt.Toolkit;
@@ -13,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Path2D;
 import java.io.IOException;
 import java.awt.event.*;
 import javafx.scene.control.Button;
@@ -37,6 +40,8 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int pos_y_ball=350;
 	private int dir_y_ball=-1;
 	private int dir_x_ball=-2;
+	private int spcial_i=0;
+	private int spcial_j=0;
 	public  static Block big_map;
 	private int player=310;
 	private int flag_play=0;
@@ -45,6 +50,7 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	Timer time;
 	Timer levelTime;
 	private int delay=5;
+	int flag_draw=0;
 	boolean state = false;
 	int mouse_flag=0;
 	public LevelUp lu=new LevelUp();
@@ -55,7 +61,7 @@ public static JFrame object=null;
 	//@SuppressWarnings("deprecation")
 	public GameController() {
 	
-		big_map=new Block(4,7,"normal");//initialize matrix of blocks
+		big_map=new Block(3,7,"normal");//initialize matrix of blocks
 		addKeyListener(this);//?
 		 addMouseMotionListener(this);
 		setFocusable(true);//?
@@ -77,7 +83,7 @@ public static JFrame object=null;
 			
 		
 	}
-	
+	/**************************mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
 
 		if(mouse_flag==0) {
@@ -104,7 +110,7 @@ public static JFrame object=null;
 		}
 	 }
 		
-		
+	/*****************************keyPressed**********************************/	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		
@@ -136,13 +142,55 @@ public static JFrame object=null;
 		flag_play=1;
 		player-=20;
 	}
+	
+	//////create star////
+	private static Shape createStar(double centerX, double centerY,
+	        double innerRadius, double outerRadius, int numRays,
+	        double startAngleRad)
+	    {
+	        Path2D path = new Path2D.Double();
+	        double deltaAngleRad = Math.PI / numRays;
+	        for (int i = 0; i < numRays * 2; i++)
+	        {
+	            double angleRad = startAngleRad + i * deltaAngleRad;
+	            double ca = Math.cos(angleRad);
+	            double sa = Math.sin(angleRad);
+	            double relX = ca;
+	            double relY = sa;
+	            if ((i & 1) == 0)
+	            {
+	                relX *= outerRadius;
+	                relY *= outerRadius;
+	            }
+	            else
+	            {
+	                relX *= innerRadius;
+	                relY *= innerRadius;
+	            }
+	            if (i == 0)
+	            {
+	                path.moveTo(centerX + relX, centerY + relY);
+	            }
+	            else
+	            {
+	                path.lineTo(centerX + relX, centerY + relY);
+	            }
+	        }
+	        path.closePath();
+	        return path;
+	    }
+	
+	/***************************paint**********************************/
 	public void paint(Graphics g) {
 	
 		g.setColor(Color.black);
 		g.fillRect(1, 1, 692, 592);
 		
 		big_map.draw((Graphics2D)(g));
-			
+		if(flag_draw==1) {
+			special_blocks((Graphics2D)g);
+		}
+	
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 3, 592);
 		g.fillRect(0, 0,692 , 3);
@@ -159,6 +207,8 @@ public static JFrame object=null;
 		g.drawString("Level: "+num, 290, 30);
 			
 		
+		
+	         
 	int flag=0;
 		for(int i=0;i<big_map.map.length&& flag==0;i++)
 		{
@@ -172,13 +222,7 @@ public static JFrame object=null;
 		if(flag ==0)
 		{
 			num++;
-			
-			//xxx-xxx
-			//xxxxxxx
-			//-xxxxx-
-			//--xxx--
-			//---x---
-			big_map=new Block(5, 7,"heart");
+			big_map=new Block(5, 8,"heart");
 		}
 				
 		
@@ -264,9 +308,26 @@ public static JFrame object=null;
 		}
 	g.dispose();
 	}
+	
+	
+	/***********************************special_blocks***********************************************/
 
+	public void special_blocks(Graphics2D g) {
+		
+		/////600 -200 - last right low
+		///600 70 right high
+		//80 70 left high
+        ((Graphics2D) g).setPaint(Color.RED);
+        //((Graphics2D) g).fill(createStar(80+spcial_i*80, 70+spcial_j*70, 20, 20, 10, 0));
+        ((Graphics2D) g).fill(createStar(80*spcial_j+80,70*spcial_i+70, 15, 15, 10, 0));
+        System.out.println("spcial_i"+spcial_i+" spcial_j "+spcial_j);
+        //flag_draw=0;
+	      ////   
+	}
+	
+	
 
-	  
+	/***********************************actionPerformed******************************************/  
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -294,11 +355,23 @@ public static JFrame object=null;
 					
 					BoundingBox ballRect = new BoundingBox(pos_x_ball,pos_y_ball,20,20);
 					BoundingBox brickRect =  new BoundingBox(brickX,brickY,brickW,brickH);
-					
+					//remove block
 					if(ballRect.intersects(brickRect)) {
+						if(big_map.mapSpecial[i][j]==true)
+							
+						{
+							spcial_i=i;
+							spcial_j=j;
+							flag_draw=1;
+							
+							
+							//special power shown
+							
+						}
 						big_map.setBrickValue(0,i,j);
 						total_brick--;
 						score+=5;
+				
 						
 						if (pos_x_ball+19<=brickRect.getMaxX() || pos_x_ball+1>=brickRect.getMaxX()+brickRect.getWidth())
 						{

@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -12,10 +14,26 @@ import javafx.scene.shape.Rectangle;
 
 public class Block {
 	public static int map[][];
+	public static Boolean mapSpecial[][];
 	public int w,h;
 	public Block(int row,int col,String type) {
 		map = new int[row][col];
-		
+		mapSpecial = new Boolean[row][col];
+		Random rn = new Random();
+		for(int i=0;i<map.length;i++)
+		{
+			
+			Arrays.fill(mapSpecial[i], Boolean.FALSE);
+
+		}
+		for(int i=0;i<3;i++)
+		{
+		 int i_special = rn.nextInt(map.length) ;
+		 int j_special = rn.nextInt(map[0].length) ;
+		 mapSpecial[i_special][j_special]=true;
+		 
+		}
+		 
 		switch (type) {
 		case "normal":
 			for(int i=0;i<map.length;i++)
@@ -63,12 +81,19 @@ public class Block {
 		for(int i=0;i<map.length;i++) {
 			for(int j=0;j<map[0].length;j++) {
 			if(map[i][j]>0) {
+				if(mapSpecial[i][j]==true)
+				{
+					g.setColor(Color.CYAN);
+				}
+				else {
 				g.setColor(Color.pink);
+				}
 				g.fillRect(j*w+80, i*h+50, w, h);
 				g.setStroke(new BasicStroke(3));
 				g.setColor(Color.black);
 				
-				g.drawRect(j*w+80, i*h+50, w, h);;
+				g.drawRect(j*w+80, i*h+50, w, h);
+				
 			}
 			
 			}

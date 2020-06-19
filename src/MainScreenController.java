@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 	    private GameController gamePlay;
 	    public JFrame obj;
 	    
+	    /***********************game_button**************************************/
 	    @FXML
 	    void game_button(ActionEvent event) throws IOException {
 	       
