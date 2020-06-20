@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Path2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.awt.event.*;
 import javafx.scene.control.Button;
@@ -42,6 +43,8 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int dir_x_ball=-2;
 	private int spcial_i=0;
 	private int spcial_j=0;
+	int indexY=1;
+	int delayStar = 400;
 	public  static Block big_map;
 	private int player=310;
 	private int flag_play=0;
@@ -49,12 +52,14 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	int score=0;
 	Timer time;
 	Timer levelTime;
+	int goDown=0;
 	private int delay=5;
 	int flag_draw=0;
 	boolean state = false;
 	int mouse_flag=0;
 	public LevelUp lu=new LevelUp();
 private Button button;
+boolean runnig= false;
 public static JFrame object=null; 
 	//constructor
 
@@ -73,6 +78,8 @@ public static JFrame object=null;
 		//levelTime.schedule(new LevelUp(), 0, 5000);
 		
 		time.start();
+		
+	     
 		flag_play=1;
 		if(Main.primaryStage.isShowing())
 		Main.primaryStage.hide();
@@ -85,7 +92,10 @@ public static JFrame object=null;
 	}
 	/**************************mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
-
+		 BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		 
+		 Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+				    cursorImg, new Point(0, 0), "blank cursor");
 		if(mouse_flag==0) {
 		if(e.getX()> player)
 		{
@@ -94,6 +104,9 @@ public static JFrame object=null;
 			}
 			else {
 				moveRight();
+                setCursor(blankCursor);
+
+				
 			}
 		}
 		else if(e.getX()< player)
@@ -103,6 +116,7 @@ public static JFrame object=null;
 			}
 				else {
 					moveLeft();
+					  setCursor(blankCursor);
 				}
 			}
 		
@@ -208,7 +222,7 @@ public static JFrame object=null;
 			
 		
 		
-	         
+	     //--------------------check if there blocks on the screen-------------------    
 	int flag=0;
 		for(int i=0;i<big_map.map.length&& flag==0;i++)
 		{
@@ -219,6 +233,7 @@ public static JFrame object=null;
 				
 				}
 			}}
+		//----------------------------------go to next level----------------------------
 		if(flag ==0)
 		{
 			num++;
@@ -226,7 +241,7 @@ public static JFrame object=null;
 		}
 				
 		
-		
+		//-----------------------------------end of game--------------------------------------------
 		if(pos_y_ball>600&&flag_play==1) {
 			flag_play=0;
 			dir_x_ball=0;
@@ -316,12 +331,42 @@ public static JFrame object=null;
 		
 		/////600 -200 - last right low
 		///600 70 right high
+		
+		  goDown=70*spcial_i+(70*indexY);
 		//80 70 left high
-        ((Graphics2D) g).setPaint(Color.RED);
+        //((Graphics2D) g).setPaint(Color.RED);
+        g.setPaint(new RadialGradientPaint(
+                new Point(80*spcial_j+80, goDown), 50, new float[] { 0, 0.3f, 1 }, 
+                new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
+            g.fill(createStar(80*spcial_j+80, goDown, 20, 20, 20, 0));
+          
         //((Graphics2D) g).fill(createStar(80+spcial_i*80, 70+spcial_j*70, 20, 20, 10, 0));
-        ((Graphics2D) g).fill(createStar(80*spcial_j+80,70*spcial_i+70, 15, 15, 10, 0));
+        ((Graphics2D) g).fill(createStar(80*spcial_j+80,goDown, 15, 15, 10, 0));
         System.out.println("spcial_i"+spcial_i+" spcial_j "+spcial_j);
+        
+        
+        
+        
+     // you can inject this property 
+        
+      
+        ActionListener taskPerformer = new ActionListener(){
+              public void actionPerformed(ActionEvent evt2) {
+                 //your code here
+    indexY++;
+              }
+        };
+        if(runnig==false)
+        {
+        Timer timer = new Timer(delayStar, taskPerformer);
+        timer.start();
+        runnig=true
+        		;
+        }
+
+    
         //flag_draw=0;
+        
 	      ////   
 	}
 	
