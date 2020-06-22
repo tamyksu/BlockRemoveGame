@@ -26,7 +26,7 @@ public class Block {
 			Arrays.fill(mapSpecial[i], Boolean.FALSE);
 
 		}
-		for(int i=0;i<3;i++)
+		for(int i=0;i<10;i++)
 		{
 		 int i_special = rn.nextInt(map.length) ;
 		 int j_special = rn.nextInt(map[0].length) ;
@@ -83,6 +83,7 @@ public class Block {
 			if(map[i][j]>0) {
 				if(mapSpecial[i][j]==true)
 				{
+					//System.out.println(i+""+j);
 					g.setColor(Color.CYAN);
 				}
 				else {

@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.*;
 import javafx.scene.control.Button;
 import javax.swing.JButton;
@@ -43,6 +44,9 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int dir_x_ball=-2;
 	private int spcial_i=0;
 	private int spcial_j=0;
+	int first=0;
+	//int[] special_index= new 
+	ArrayList<ArrayList<Integer>> special_index = new ArrayList<ArrayList<Integer>>(); // Create an ArrayList object
 	int indexY=1;
 	int delayStar = 400;
 	public  static Block big_map;
@@ -59,14 +63,20 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	int mouse_flag=0;
 	public LevelUp lu=new LevelUp();
 private Button button;
-boolean runnig= false;
+Boolean[] running = new Boolean[3];
+//boolean running= false;
 public static JFrame object=null; 
 	//constructor
 
 	//@SuppressWarnings("deprecation")
 	public GameController() {
-	
+		
 		big_map=new Block(3,7,"normal");//initialize matrix of blocks
+		for(int i=0;i<3;i++)
+		{
+			running[i]=false;
+		}
+		
 		addKeyListener(this);//?
 		 addMouseMotionListener(this);
 		setFocusable(true);//?
@@ -200,8 +210,18 @@ public static JFrame object=null;
 		g.setColor(Color.black);
 		g.fillRect(1, 1, 692, 592);
 		
+		if(goDown>=560)
+		{
+			System.out.println(goDown);
+			System.out.println("????????");
+			big_map.mapSpecial[spcial_i][spcial_j]=false;
+			flag_draw=0;
+			indexY=1;
+			goDown=0;
+		}
 		big_map.draw((Graphics2D)(g));
-		if(flag_draw==1) {
+		if(flag_draw==1&&goDown<560) {
+			System.out.println("flag draw"+flag_draw);
 			special_blocks((Graphics2D)g);
 		}
 	
@@ -331,9 +351,11 @@ public static JFrame object=null;
 		
 		/////600 -200 - last right low
 		///600 70 right high
-		
+		if(goDown<560) {
+		System.out.println(goDown);
 		  goDown=70*spcial_i+(70*indexY);
 		//80 70 left high
+		 // System.out.println(goDown);
         //((Graphics2D) g).setPaint(Color.RED);
         g.setPaint(new RadialGradientPaint(
                 new Point(80*spcial_j+80, goDown), 50, new float[] { 0, 0.3f, 1 }, 
@@ -342,9 +364,14 @@ public static JFrame object=null;
           
         //((Graphics2D) g).fill(createStar(80+spcial_i*80, 70+spcial_j*70, 20, 20, 10, 0));
         ((Graphics2D) g).fill(createStar(80*spcial_j+80,goDown, 15, 15, 10, 0));
-        System.out.println("spcial_i"+spcial_i+" spcial_j "+spcial_j);
+        //System.out.println("spcial_i"+spcial_i+" spcial_j "+spcial_j);
         
-        
+		}
+		else
+		{
+			//indexY=1;
+			goDown=0;
+		}
         
         
      // you can inject this property 
@@ -356,13 +383,32 @@ public static JFrame object=null;
     indexY++;
               }
         };
-        if(runnig==false)
+      
+        if(first==0)
+        {
+        	 Timer timer = new Timer(delayStar, taskPerformer);
+ 	        timer.start();
+ 	        first=1;
+        	
+        }
+       /* for(int i=0;i<3;i++)
+        {
+        	 if(running[i]==false)
+        	 {  
+        		 System.out.println("P:");
+        		
+        	        running[i]=true;
+        	        i=3;
+        	        break;
+        		 
+        	 }
+        }*/
+      /* if(runnig[0]==false)
         {
         Timer timer = new Timer(delayStar, taskPerformer);
         timer.start();
-        runnig=true
-        		;
-        }
+        runnig[0]=true;
+        }*/
 
     
         //flag_draw=0;
@@ -405,14 +451,17 @@ public static JFrame object=null;
 						if(big_map.mapSpecial[i][j]==true)
 							
 						{
+							System.out.println("special block");
 							spcial_i=i;
 							spcial_j=j;
+							goDown=0;
 							flag_draw=1;
 							
 							
 							//special power shown
 							
 						}
+					
 						big_map.setBrickValue(0,i,j);
 						total_brick--;
 						score+=5;
