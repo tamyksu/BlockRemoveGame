@@ -19,6 +19,7 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.*;
 import javafx.scene.control.Button;
 import javax.swing.JButton;
@@ -55,52 +56,48 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	int num=1;
 	int score=0;
 	Timer time;
+	private Thread t;
+	 ArrayList <Graphics2D> ar=new  ArrayList <Graphics2D> (10);
+	 ArrayList <Integer> flag_draw=new  ArrayList <Integer> (Collections.nCopies(10, 0));
 	Timer levelTime;
 	int goDown=0;
 	private int delay=5;
-	int flag_draw=0;
+	//int flag_draw=0;
 	boolean state = false;
 	int mouse_flag=0;
+	 public static ArrayList <Boolean>  signal=new  ArrayList <Boolean>(Collections.nCopies(10, false)) ;
+	 int signal_index=0;
 	public LevelUp lu=new LevelUp();
 private Button button;
 Boolean[] running = new Boolean[3];
 //boolean running= false;
 public static JFrame object=null; 
+//public static ArrayList <Thread> object =new ArrayList <Thread> (10) ;
 	//constructor
-
+/**********************************-1-GameController-Constructor***********************************************/
 	//@SuppressWarnings("deprecation")
 	public GameController() {
-		
 		big_map=new Block(3,7,"normal");//initialize matrix of blocks
-		for(int i=0;i<3;i++)
-		{
-			running[i]=false;
-		}
-		
 		addKeyListener(this);//?
 		 addMouseMotionListener(this);
 		setFocusable(true);//?
 		setFocusTraversalKeysEnabled(false);//?
 		time = new Timer(delay,this);//for delay of ball
-		  lu.level_timer();
-	
-		//levelTime = new Timer(1000, null);
-		//levelTime.schedule(new LevelUp(), 0, 5000);
-		
+		  lu.level_timer();//i'm not using it for now
 		time.start();
-		
-	     
+		int index=0;
 		flag_play=1;
 		if(Main.primaryStage.isShowing())
 		Main.primaryStage.hide();
-	//	if(object!=null) {
-	//	GameController.object.hide();
-	//	}
-
-			
 		
+		/*for (int i=0; i<10; i++) 
+        { 
+			String val=String.valueOf(i);
+             object.add(new Thread(new Stars(),val)) ; 
+            object.get(i).start(); 
+        } */
 	}
-	/**************************mouseMoved***********************************/
+	/**************************-2-mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
 		 BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		 
@@ -115,8 +112,6 @@ public static JFrame object=null;
 			else {
 				moveRight();
                 setCursor(blankCursor);
-
-				
 			}
 		}
 		else if(e.getX()< player)
@@ -134,7 +129,7 @@ public static JFrame object=null;
 		}
 	 }
 		
-	/*****************************keyPressed**********************************/	
+	/*****************************-3-keyPressed**********************************/	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		
@@ -157,17 +152,18 @@ public static JFrame object=null;
 		}
 		}
 	}
+	/*****************************-4-moveRight**********************************/	
 	public void moveRight() {
 		
 		flag_play=1;
 		player+=20;
 	}
+	/*****************************-5-moveLeft**********************************/
 	public void moveLeft() {
 		flag_play=1;
 		player-=20;
 	}
-	
-	//////create star////
+	/*****************************-6-create**********************************/
 	private static Shape createStar(double centerX, double centerY,
 	        double innerRadius, double outerRadius, int numRays,
 	        double startAngleRad)
@@ -204,26 +200,27 @@ public static JFrame object=null;
 	        return path;
 	    }
 	
-	/***************************paint**********************************/
+	/***************************-7-paint**********************************/
 	public void paint(Graphics g) {
 	
-		g.setColor(Color.black);
+		g.setColor(Color.black);//border 
 		g.fillRect(1, 1, 692, 592);
 		
-		if(goDown>=560)
+		if(goDown>=560)//if star fall down
 		{
-			System.out.println(goDown);
-			System.out.println("????????");
+			System.out.println("paint: goDown big then 560"+goDown);
 			big_map.mapSpecial[spcial_i][spcial_j]=false;
-			flag_draw=0;
+			flag_draw.set((int)t.getId(), 0);
 			indexY=1;
 			goDown=0;
 		}
-		big_map.draw((Graphics2D)(g));
-		if(flag_draw==1&&goDown<560) {
-			System.out.println("flag draw"+flag_draw);
+		big_map.draw((Graphics2D)(g));//drawing all the blocks
+		
+	 // if(/*flag_draw.get((int)t.getId())==1&&*/goDown<560) {//if the star still falling down*/
+		/*	System.out.println("goDown less then 560"+goDown);
+			
 			special_blocks((Graphics2D)g);
-		}
+		}*/
 	
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 3, 592);
@@ -345,38 +342,23 @@ public static JFrame object=null;
 	}
 	
 	
-	/***********************************special_blocks***********************************************/
+	/***********************************-8-special_blocks***********************************************/
 
 	public void special_blocks(Graphics2D g) {
-		
-		/////600 -200 - last right low
-		///600 70 right high
+	
 		if(goDown<560) {
 		System.out.println(goDown);
 		  goDown=70*spcial_i+(70*indexY);
-		//80 70 left high
-		 // System.out.println(goDown);
-        //((Graphics2D) g).setPaint(Color.RED);
+
+		
+		
         g.setPaint(new RadialGradientPaint(
-                new Point(80*spcial_j+80, goDown), 50, new float[] { 0, 0.3f, 1 }, 
-                new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
+	               new Point(80*spcial_j+80, goDown), 50, new float[] { 0, 0.3f, 1 }, 
+	               new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
             g.fill(createStar(80*spcial_j+80, goDown, 20, 20, 20, 0));
-          
-        //((Graphics2D) g).fill(createStar(80+spcial_i*80, 70+spcial_j*70, 20, 20, 10, 0));
         ((Graphics2D) g).fill(createStar(80*spcial_j+80,goDown, 15, 15, 10, 0));
-        //System.out.println("spcial_i"+spcial_i+" spcial_j "+spcial_j);
-        
 		}
-		else
-		{
-			//indexY=1;
-			goDown=0;
-		}
-        
-        
-     // you can inject this property 
-        
-      
+	
         ActionListener taskPerformer = new ActionListener(){
               public void actionPerformed(ActionEvent evt2) {
                  //your code here
@@ -386,39 +368,19 @@ public static JFrame object=null;
       
         if(first==0)
         {
+        	int random_size= big_map.getRandomSize();
+        	
         	 Timer timer = new Timer(delayStar, taskPerformer);
  	        timer.start();
  	        first=1;
         	
         }
-       /* for(int i=0;i<3;i++)
-        {
-        	 if(running[i]==false)
-        	 {  
-        		 System.out.println("P:");
-        		
-        	        running[i]=true;
-        	        i=3;
-        	        break;
-        		 
-        	 }
-        }*/
-      /* if(runnig[0]==false)
-        {
-        Timer timer = new Timer(delayStar, taskPerformer);
-        timer.start();
-        runnig[0]=true;
-        }*/
 
-    
-        //flag_draw=0;
-        
-	      ////   
 	}
 	
 	
 
-	/***********************************actionPerformed******************************************/  
+	/***********************************-9-actionPerformed******************************************/  
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -451,14 +413,15 @@ public static JFrame object=null;
 						if(big_map.mapSpecial[i][j]==true)
 							
 						{
-							System.out.println("special block");
+							System.out.println("actionPerformed-special block");
 							spcial_i=i;
 							spcial_j=j;
 							goDown=0;
-							flag_draw=1;
-							
-							
-							//special power shown
+							//signal.set(signal_index,true);
+							//object.notifyAll();
+							//signal_index++;
+
+							//flag_draw.set((int)t.getId(),1);
 							
 						}
 					

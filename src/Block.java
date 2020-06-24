@@ -16,6 +16,7 @@ public class Block {
 	public static int map[][];
 	public static Boolean mapSpecial[][];
 	public int w,h;
+	private int random_size=10;
 	public Block(int row,int col,String type) {
 		map = new int[row][col];
 		mapSpecial = new Boolean[row][col];
@@ -26,13 +27,14 @@ public class Block {
 			Arrays.fill(mapSpecial[i], Boolean.FALSE);
 
 		}
-		for(int i=0;i<10;i++)
+		for(int i=0;i<random_size;i++)
 		{
 		 int i_special = rn.nextInt(map.length) ;
 		 int j_special = rn.nextInt(map[0].length) ;
 		 mapSpecial[i_special][j_special]=true;
 		 
 		}
+	
 		 
 		switch (type) {
 		case "normal":
@@ -77,6 +79,11 @@ public class Block {
 		w=80;
 		h=50;
 	}	
+	
+	public int getRandomSize()
+	{
+		return random_size;
+	}
 	public void draw(Graphics2D g) {
 		for(int i=0;i<map.length;i++) {
 			for(int j=0;j<map[0].length;j++) {
