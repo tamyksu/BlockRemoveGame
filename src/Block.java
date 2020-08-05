@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -15,7 +16,9 @@ import javafx.scene.shape.Rectangle;
 public class Block {
 	public static int map[][];
 	public static Boolean mapSpecial[][];
+	public ArrayList<ArrayList<Integer>> indexSpecial= new ArrayList<ArrayList<Integer>>();
 	public int w,h;
+	int x,y;
 	private int random_size=10;
 	public Block(int row,int col,String type) {
 		map = new int[row][col];
@@ -27,12 +30,20 @@ public class Block {
 			Arrays.fill(mapSpecial[i], Boolean.FALSE);
 
 		}
+		
+		ArrayList<Integer> location= new  ArrayList<Integer>();
+
 		for(int i=0;i<random_size;i++)
 		{
 		 int i_special = rn.nextInt(map.length) ;
 		 int j_special = rn.nextInt(map[0].length) ;
 		 mapSpecial[i_special][j_special]=true;
-		 
+		 location.add(j_special*80+80);
+		 location.add(i_special*50+50);
+		 indexSpecial.add(location);
+		 location.clear();
+			//x=j*w+80;
+			//y=i*h+50;
 		}
 	
 		 
@@ -78,6 +89,8 @@ public class Block {
 		//w=540/col;
 		w=80;
 		h=50;
+		
+	
 	}	
 	
 	public int getRandomSize()

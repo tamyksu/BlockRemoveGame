@@ -72,9 +72,11 @@ private Button button;
 Boolean[] running = new Boolean[3];
 //boolean running= false;
 public static JFrame object=null; 
-//public static ArrayList <Thread> object =new ArrayList <Thread> (10) ;
+public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 	//constructor
+
 /**********************************-1-GameController-Constructor***********************************************/
+
 	//@SuppressWarnings("deprecation")
 	public GameController() {
 		big_map=new Block(3,7,"normal");//initialize matrix of blocks
@@ -85,17 +87,18 @@ public static JFrame object=null;
 		time = new Timer(delay,this);//for delay of ball
 		  lu.level_timer();//i'm not using it for now
 		time.start();
+		
 		int index=0;
 		flag_play=1;
 		if(Main.primaryStage.isShowing())
 		Main.primaryStage.hide();
 		
-		/*for (int i=0; i<10; i++) 
+		for (int i=0; i<10; i++) 
         { 
-			String val=String.valueOf(i);
-             object.add(new Thread(new Stars(),val)) ; 
-            object.get(i).start(); 
-        } */
+			//String val=String.valueOf(i);
+             ThreadArray.add(new Thread(new Stars(big_map.indexSpecial))) ; 
+             ThreadArray.get(i).start(); 
+        } 
 	}
 	/**************************-2-mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
@@ -216,10 +219,11 @@ public static JFrame object=null;
 		}
 		big_map.draw((Graphics2D)(g));//drawing all the blocks
 		
+		//special_blocks((Graphics2D)g);
 	 // if(/*flag_draw.get((int)t.getId())==1&&*/goDown<560) {//if the star still falling down*/
 		/*	System.out.println("goDown less then 560"+goDown);
 			
-			special_blocks((Graphics2D)g);
+			
 		}*/
 	
 		g.setColor(Color.yellow);
@@ -341,14 +345,16 @@ public static JFrame object=null;
 	g.dispose();
 	}
 	
-	
+	public int goDown(int y)
+	{
+		y+=50;
+		return y;
+		
+	}
 	/***********************************-8-special_blocks***********************************************/
 
-	public void special_blocks(Graphics2D g) {
+	public void special_blocks(Graphics2D g,int x,int y) {
 	
-		if(goDown<560) {
-		System.out.println(goDown);
-		  goDown=70*spcial_i+(70*indexY);
 
 		
 		
@@ -357,7 +363,7 @@ public static JFrame object=null;
 	               new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
             g.fill(createStar(80*spcial_j+80, goDown, 20, 20, 20, 0));
         ((Graphics2D) g).fill(createStar(80*spcial_j+80,goDown, 15, 15, 10, 0));
-		}
+		
 	
         ActionListener taskPerformer = new ActionListener(){
               public void actionPerformed(ActionEvent evt2) {
@@ -417,6 +423,9 @@ public static JFrame object=null;
 							spcial_i=i;
 							spcial_j=j;
 							goDown=0;
+							//nofity spefic tread
+							
+							
 							//signal.set(signal_index,true);
 							//object.notifyAll();
 							//signal_index++;
