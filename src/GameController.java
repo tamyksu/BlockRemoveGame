@@ -62,6 +62,7 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	Timer levelTime;
 	int goDown=0;
 	private int delay=5;
+	int flagSpecial=0;
 	//int flag_draw=0;
 	boolean state = false;
 	int mouse_flag=0;
@@ -93,12 +94,12 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 		if(Main.primaryStage.isShowing())
 		Main.primaryStage.hide();
 		
-		for (int i=0; i<10; i++) 
+	/*	for (int i=0; i<10; i++) 
         { 
 			//String val=String.valueOf(i);
              ThreadArray.add(new Thread(new Stars(big_map.indexSpecial))) ; 
              ThreadArray.get(i).start(); 
-        } 
+        } */
 	}
 	/**************************-2-mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
@@ -208,8 +209,12 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 	
 		g.setColor(Color.black);//border 
 		g.fillRect(1, 1, 692, 592);
-		
-		if(goDown>=560)//if star fall down
+		/*if(flagSpecial==1)
+		{
+			special_blocks((Graphics2D)g,spcial_i,spcial_j);
+			flagSpecial=0;
+		}*/
+		/*if(goDown>=560)//if star fall down
 		{
 			System.out.println("paint: goDown big then 560"+goDown);
 			big_map.mapSpecial[spcial_i][spcial_j]=false;
@@ -217,9 +222,10 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 			indexY=1;
 			goDown=0;
 		}
+		*/
 		big_map.draw((Graphics2D)(g));//drawing all the blocks
 		
-		//special_blocks((Graphics2D)g);
+		//special_blocks((Graphics2D)g,i);
 	 // if(/*flag_draw.get((int)t.getId())==1&&*/goDown<560) {//if the star still falling down*/
 		/*	System.out.println("goDown less then 560"+goDown);
 			
@@ -353,26 +359,28 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 	}
 	/***********************************-8-special_blocks***********************************************/
 
-	public void special_blocks(Graphics2D g,int x,int y) {
-	
+/*	public void special_blocks(Graphics2D g,int x,int y) {
+		
+	//while(x<550)
+	//{
+		System.out.println("x="+x);
+	        g.setPaint(new RadialGradientPaint(
+		               new Point(80*y+120, 50*x+75), 50, new float[] { 0, 0.3f, 1 }, 
+		               new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
+	            g.fill(createStar(80*y+120, 50*x+75, 20, 20, 20, 0));
+	        ((Graphics2D) g).fill(createStar(80*y+120, 50*x+75, 15, 15, 10, 0));
+			
+		x+=50;
+//	}
 
-		
-		
-        g.setPaint(new RadialGradientPaint(
-	               new Point(80*spcial_j+80, goDown), 50, new float[] { 0, 0.3f, 1 }, 
-	               new Color[] { Color.RED, Color.YELLOW, Color.ORANGE }));
-            g.fill(createStar(80*spcial_j+80, goDown, 20, 20, 20, 0));
-        ((Graphics2D) g).fill(createStar(80*spcial_j+80,goDown, 15, 15, 10, 0));
-		
-	
-        ActionListener taskPerformer = new ActionListener(){
+     /*   ActionListener taskPerformer = new ActionListener(){
               public void actionPerformed(ActionEvent evt2) {
                  //your code here
-    indexY++;
+    //indexY++;
               }
         };
       
-        if(first==0)
+       /* if(first==0)
         {
         	int random_size= big_map.getRandomSize();
         	
@@ -380,9 +388,9 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
  	        timer.start();
  	        first=1;
         	
-        }
+        }*/
 
-	}
+	
 	
 	
 
@@ -395,7 +403,7 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 		if(flag_play==1)
 		{
 
-			
+			/****if ball touch the border it change direction moving up***/
 		if((new BoundingBox (pos_x_ball,pos_y_ball,20,20).intersects(new BoundingBox(player,550,100,8))))
 		{
 
@@ -414,15 +422,18 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 					
 					BoundingBox ballRect = new BoundingBox(pos_x_ball,pos_y_ball,20,20);
 					BoundingBox brickRect =  new BoundingBox(brickX,brickY,brickW,brickH);
-					//remove block
+					//if ball touch the block -remove block 
 					if(ballRect.intersects(brickRect)) {
-						if(big_map.mapSpecial[i][j]==true)
+						if(big_map.mapSpecial[i][j]==true)//check if it is special block
 							
 						{
-							System.out.println("actionPerformed-special block");
+						//	System.out.println("actionPerformed-special block ^^");
+							
+							 flagSpecial=1;
 							spcial_i=i;
 							spcial_j=j;
-							goDown=0;
+							new Star(spcial_i,spcial_j);
+							//goDown=0;
 							//nofity spefic tread
 							
 							
@@ -431,7 +442,7 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 							//signal_index++;
 
 							//flag_draw.set((int)t.getId(),1);
-							
+							big_map.mapSpecial[i][j]=false;
 						}
 					
 						big_map.setBrickValue(0,i,j);

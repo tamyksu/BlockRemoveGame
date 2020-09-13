@@ -60,7 +60,7 @@ public class Stars extends JPanel implements Runnable{
 			}
 		}
 		ArrayList<Integer>location= special.get(save_i);
-		gc.special_blocks((Graphics2D)(g),location.get(0),location.get(1));//x,y
+	//	gc.special_blocks((Graphics2D)(g),location.get(0),location.get(1));//x,y
 		
 		if(location.get(1)<560)
 		{

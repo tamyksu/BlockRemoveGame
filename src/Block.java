@@ -14,9 +14,15 @@ import javax.imageio.ImageIO;
 import javafx.scene.shape.Rectangle;
 
 public class Block {
+	
+	/**
+	 * (int) map- initlize all blocks to value 1
+	 * (boolean) mapSpecial- get true on special index
+	 * 
+	 */
 	public static int map[][];
 	public static Boolean mapSpecial[][];
-	public ArrayList<ArrayList<Integer>> indexSpecial= new ArrayList<ArrayList<Integer>>();
+	//public ArrayList<ArrayList<Integer>> indexSpecial= new ArrayList<ArrayList<Integer>>();
 	public int w,h;
 	int x,y;
 	private int random_size=10;
@@ -24,31 +30,30 @@ public class Block {
 		map = new int[row][col];
 		mapSpecial = new Boolean[row][col];
 		Random rn = new Random();
+		
 		for(int i=0;i<map.length;i++)
 		{
-			
 			Arrays.fill(mapSpecial[i], Boolean.FALSE);
-
 		}
-		
-		ArrayList<Integer> location= new  ArrayList<Integer>();
 
+		//ArrayList<Integer> location= new  ArrayList<Integer>();
+		/****************************getting 10 random points put there true*************************/
 		for(int i=0;i<random_size;i++)
 		{
 		 int i_special = rn.nextInt(map.length) ;
 		 int j_special = rn.nextInt(map[0].length) ;
 		 mapSpecial[i_special][j_special]=true;
-		 location.add(j_special*80+80);
-		 location.add(i_special*50+50);
-		 indexSpecial.add(location);
-		 location.clear();
+		// location.add(j_special*80+80);
+		// location.add(i_special*50+50);
+		/// indexSpecial.add(location);
+		// location.clear();
 			//x=j*w+80;
 			//y=i*h+50;
 		}
 	
 		 
 		switch (type) {
-		case "normal":
+		case "normal"://for level 1
 			for(int i=0;i<map.length;i++)
 			{
 			for(int j=0;j<map[0].length;j++) 
@@ -58,12 +63,7 @@ public class Block {
 				}
 			break;
 			
-		case "heart":
-
-			/*for(int j=0;j<map[0].length;j++) 
-				if(j!=3&&j!=2)
-				map[0][j]=1;*/
-	
+		case "heart"://for level 2
 			for(int i=0;i<map.length;i++)
 			{
 			for(int j=i;j<map[0].length-i;j++) 
@@ -82,22 +82,18 @@ public class Block {
 		default:
 			break;
 		}
-	
-	
-	
-		
 		//w=540/col;
 		w=80;
 		h=50;
-		
-	
 	}	
 	
 	public int getRandomSize()
 	{
 		return random_size;
 	}
-	public void draw(Graphics2D g) {
+	
+	public void draw(Graphics2D g) 
+	{
 		for(int i=0;i<map.length;i++) {
 			for(int j=0;j<map[0].length;j++) {
 			if(map[i][j]>0) {
