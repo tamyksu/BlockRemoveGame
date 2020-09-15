@@ -1,10 +1,15 @@
 	import java.awt.Label;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import javafx.event.ActionEvent;
     import javafx.fxml.FXML;
@@ -29,20 +34,19 @@ import javafx.stage.Stage;
 	    /***********************game_button**************************************/
 	    @FXML
 	    void game_button(ActionEvent event) throws IOException {
-	       
-	   
-	    	
+	    
 	    	 obj= new JFrame();
 	    	 object=obj;
-	    	 
 	    	 gamePlay= new GameController();
-	    	obj.setBounds(10,10,700,600);
-	    	
-	    	obj.setResizable(false);
+	    	 obj.setBounds(10,10,700,600);
+	    	 obj.setResizable(false);
 	    	//this.close();
-	    	obj.setVisible(true);
 	    	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    	obj.add(gamePlay);
+	
+	    	//add(background);
+	    	
+	    	obj.setVisible(true);
 	    	//obj.setVisible(false);
 	    	//getGameControllerJFrame();
 

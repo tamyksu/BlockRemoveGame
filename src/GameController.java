@@ -17,15 +17,23 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.awt.event.*;
 import javafx.scene.control.Button;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
+import java.applet.Applet;
 import java.awt.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.BoundingBox;
@@ -46,7 +54,7 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	private int spcial_i=0;
 	private int spcial_j=0;
 	int first=0;
-	//int[] special_index= new 
+	
 	ArrayList<ArrayList<Integer>> special_index = new ArrayList<ArrayList<Integer>>(); // Create an ArrayList object
 	int indexY=1;
 	int delayStar = 400;
@@ -56,14 +64,15 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	int num=1;
 	int score=0;
 	Timer time;
-	private Thread t;
+
 	 ArrayList <Graphics2D> ar=new  ArrayList <Graphics2D> (10);
 	 ArrayList <Integer> flag_draw=new  ArrayList <Integer> (Collections.nCopies(10, 0));
 	Timer levelTime;
 	int goDown=0;
+	Image  backgroundImage;
 	private int delay=5;
 	int flagSpecial=0;
-	//int flag_draw=0;
+
 	boolean state = false;
 	int mouse_flag=0;
 	 public static ArrayList <Boolean>  signal=new  ArrayList <Boolean>(Collections.nCopies(10, false)) ;
@@ -71,35 +80,28 @@ public class GameController extends JPanel implements ActionListener, KeyListene
 	public LevelUp lu=new LevelUp();
 private Button button;
 Boolean[] running = new Boolean[3];
-//boolean running= false;
-public static JFrame object=null; 
-public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
-	//constructor
 
-/**********************************-1-GameController-Constructor***********************************************/
+/**********************************-1-GameController-Constructor
+ * @throws IOException ***********************************************/
 
-	//@SuppressWarnings("deprecation")
-	public GameController() {
+	//@SuppressWarnings("deprecation") constuctor
+	public GameController() throws IOException {
+		
 		big_map=new Block(3,7,"normal");//initialize matrix of blocks
 		addKeyListener(this);//?
-		 addMouseMotionListener(this);
+		addMouseMotionListener(this);
 		setFocusable(true);//?
 		setFocusTraversalKeysEnabled(false);//?
 		time = new Timer(delay,this);//for delay of ball
-		  lu.level_timer();//i'm not using it for now
+		lu.level_timer();//i'm not using it for now
 		time.start();
-		
-		int index=0;
+		 backgroundImage = new ImageIcon(this.getClass().getResource("/sky.jpg")).getImage();
+		//backgroundImage = Toolkit.getDefaultToolkit().createImage("sky.jpg");
+		//backgroundImage = ImageIO.read(new java.net.URL(getClass().getResource("src/sky.jpg"), "src/sky.jpg"));
 		flag_play=1;
 		if(Main.primaryStage.isShowing())
 		Main.primaryStage.hide();
 		
-	/*	for (int i=0; i<10; i++) 
-        { 
-			//String val=String.valueOf(i);
-             ThreadArray.add(new Thread(new Stars(big_map.indexSpecial))) ; 
-             ThreadArray.get(i).start(); 
-        } */
 	}
 	/**************************-2-mouseMoved***********************************/
 	 public void mouseMoved(MouseEvent e) {
@@ -205,33 +207,13 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 	    }
 	
 	/***************************-7-paint**********************************/
-	public void paint(Graphics g) {
-	
-		g.setColor(Color.black);//border 
-		g.fillRect(1, 1, 692, 592);
-		/*if(flagSpecial==1)
-		{
-			special_blocks((Graphics2D)g,spcial_i,spcial_j);
-			flagSpecial=0;
-		}*/
-		/*if(goDown>=560)//if star fall down
-		{
-			System.out.println("paint: goDown big then 560"+goDown);
-			big_map.mapSpecial[spcial_i][spcial_j]=false;
-			flag_draw.set((int)t.getId(), 0);
-			indexY=1;
-			goDown=0;
-		}
-		*/
+	 @Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		 
+		g.drawImage(backgroundImage, 0, 0,692,592,null);
 		big_map.draw((Graphics2D)(g));//drawing all the blocks
 		
-		//special_blocks((Graphics2D)g,i);
-	 // if(/*flag_draw.get((int)t.getId())==1&&*/goDown<560) {//if the star still falling down*/
-		/*	System.out.println("goDown less then 560"+goDown);
-			
-			
-		}*/
-	
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 3, 592);
 		g.fillRect(0, 0,692 , 3);
@@ -292,15 +274,22 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 	    		    	obj.setVisible(true);
 	    		  //	Main.primaryStage.show();
 	    		     	JFrame obj= new JFrame();
-	    		    	GameController gamePlay= new GameController();
-	    		    	obj.setBounds(10,10,700,600);
-	    		    	
-	    		    	obj.setResizable(false);
-	    		    	obj.setVisible(true);
-	    		    	//object=obj;
-	    		    	mouse_flag=0;
-	    		    //	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    		    	obj.add(gamePlay);
+	    		    	GameController gamePlay;
+						try {
+							gamePlay = new GameController();
+							obj.setBounds(10,10,700,600);
+							obj.setResizable(false);
+							obj.setVisible(true);
+							//object=obj;
+							mouse_flag=0;
+							//	obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							obj.add(gamePlay);
+							
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	    		
 	    		    }  
 	    		    });  
 	    	 
@@ -432,7 +421,14 @@ public static ArrayList <Thread> ThreadArray =new ArrayList <Thread> (10) ;
 							 flagSpecial=1;
 							spcial_i=i;
 							spcial_j=j;
-							new Star(spcial_i,spcial_j);
+							SwingUtilities.invokeLater(new Runnable() {
+
+							  @Override
+						        public void run() {
+							Star st=new Star(spcial_i,spcial_j);
+							st.repaint();
+						  }});
+							
 							//goDown=0;
 							//nofity spefic tread
 							

@@ -15,8 +15,6 @@ public class Star extends JPanel{
 		this.x=x;
 		this.y=y;
 		System.out.println("Star Constructor");
-		
-		repaint();
 	}
 	
 	public void starFall()
@@ -25,14 +23,13 @@ public class Star extends JPanel{
 		
 	}
 	
-	public void paint(Graphics g) {
-		
-		System.out.println("Star paint");
+
+	 public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+		System.out.println("Star paint 11");
 		special_blocks((Graphics2D)g,x,y);
-	
-		
-	
 	}
+
 	
 	/*
 	 * not entering paint methode
